@@ -11,17 +11,31 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin','*');
+    res.header('Access-Control-Allow-Headers','*');
+    
+    if(req.method === 'OPTIONS'){
+        res.header('Access-Control-Allow-Methods',
+            'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).json({});
+
+    }
+
+    next();
+});
+
 
 app.use('/logs', siteLogRoutes);
 app.use('/users', userRoutes);
 
-app.get('/', (req, res) => {
-    res.send('hello')
-});
+// app.get('/', (req, res) => {
+//     res.send('hello')
+// });
 
 app.use((req, res, next) => {
-    const error = new Error('ERROR - not found');
-    res.status(404).json({error: 'ERROR!!!!!!'});
+    // const error = new Error('ERROR - not found');
+    res.status(404).json({error: 'Error - not g found'});
     next(error);
 });
 

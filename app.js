@@ -26,6 +26,16 @@ app.use((req, res, next) => {
 });
 
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin','*');
+    res.header('Allow-Control-Allow-Headers','*');
+    if(req.method === 'OPTIONS'){
+        res.header('Access-Control-Allow-Methods', 'POST, PUT, PATCH, DELETE, GET');
+        return res.status(200).json({});
+    }
+    next();
+});
+
 app.use('/logs', siteLogRoutes);
 app.use('/users', userRoutes);
 

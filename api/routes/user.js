@@ -36,41 +36,6 @@ router.post('/signup', (req, res, next) => {
     });
 });//.post
 
-/*
-//user login
-router.post('/login', (req, res, next) => {
-    User.find({email: req.body.email})
-    .exec().then(user => {
-        if(user.length < 1){
-            return res.status(401).json({message: 'failed to find email'});
-        }
-        
-        bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-            if(err){
-                return res.status(401).json({message: 'password wrong'});
-            }
-            if(result){
-                const token = jwt.sign({
-                    email: user[0].email,
-                    userId: user[0]._id
-                }, process.env.JWT_KEY,
-                {expiresIn: '1h'});
-                return res.status(200).json({
-                    message: 'Login successful',
-                    token: token
-                });
-            }
-            res.status(401).json({message: 'AUTH FAILED'});
-        });
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
-});
-*/
-
 //setup auto delete of token on logout
 //user login2
 router.post('/login', (req, res) => {
@@ -80,7 +45,7 @@ router.post('/login', (req, res) => {
         return user.generateAuthToken().then((token) => {
             res.header('x-auth', token).send(user);
         });
-    }).catch(err => { res.status(400).json({error: 'login fail'}); });    
+    }).catch(err => { res.status(400).json({error: 'login fail'}); });
 });
 
 //delete user

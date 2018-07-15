@@ -8,7 +8,7 @@ const columnSchema = mongoose.Schema({
   },
   logs: {
     type: Array,
-    required: false
+    required: true
   }
 });
 

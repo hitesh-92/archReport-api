@@ -52,7 +52,7 @@ router.get('/:logId', (req, res, next) => {
     siteLog.findById(id)
     .select('_id title url entryDate')
     .exec().then(log => {
-        console.log('Log found:', log);
+        // console.log('Log found:', log);
         if(!log){
             return res.status(404).send();
         }
@@ -69,7 +69,7 @@ router.patch('/:logId', (req, res, next) => {
     // const title = _.pick(req.body, ['title']);
     // const url = _.pick(req.body, ['url']);
     const body = _.pick(req.body, ['title', 'url']);
-    
+
 
     if(!ObjectID.isValid(id)){
         return res.status(404).json({

@@ -5,6 +5,7 @@ const app = express();
 const {mongoose} = require('./db/mongoose');
 
 const siteLogRoutes = require('./api/routes/siteLog');
+const columnRoutes = require('./api/routes/column');
 const userRoutes = require('./api/routes/user');
 
 app.use(morgan('dev'));
@@ -14,7 +15,7 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Headers','*');
-    
+
     if(req.method === 'OPTIONS'){
         res.header('Access-Control-Allow-Methods',
             'PUT, POST, PATCH, DELETE, GET');
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/logs', siteLogRoutes);
+app.use('/column', columnRoutes);
 app.use('/users', userRoutes);
 
 // app.get('/', (req, res) => {

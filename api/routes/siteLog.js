@@ -122,18 +122,14 @@ router.delete('/:logId', (req, res, next) => {
 router.get('/multiple/:multiple', (req, res, next) => {
   const ids = req.params.multiple;
   const splitIDs =  ids.split(',');
-
   let articles = [];
 
   const getArticle = async (id) => {
-    const article = await siteLog.findById(id).select('title _id url entryDate').exec();
-    return article;
+    return await siteLog.findById(id).select('title _id url entryDate').exec();
   };
 
   genFor(function*(){
-    for (each of splitIDs) {
-      yield each
-    }
+    for (each of splitIDs) {yield each}
   });
 
   function genFor(generator){
@@ -144,20 +140,11 @@ router.get('/multiple/:multiple', (req, res, next) => {
 
         let id = yielded.value;
 
-        // async function getArticle(articleId){
-        //   const article = await siteLog.findById(articleId).select('title url entryDate').exec();
-        //   return article;
-        // }
-
         getArticle(id).then((data) => {
           console.log(data);
           articles.push(data);
           return handle(gen.next());
         });
-
-
-        // articles.id = article;
-
       }
 
       if(yielded.done){
@@ -170,30 +157,7 @@ router.get('/multiple/:multiple', (req, res, next) => {
       }
     }
     return handle(gen.next());
-
   }
-
-  // console.log(articles);
-
-  // res.status(200).json({
-  //   logs: splitIDs,
-  //   length: splitIDs.length,
-  //   articles
-  // });
-
-
-  //-------
-  // siteLog.findById(id)
-  // .select('_id title url entryDate')
-  // .exec().then(log => {
-  //
-  //     if(!log){
-  //         return res.status(404).send();
-  //     }
-  //     res.send({log});
-  // })
-  //------
-
 });
 
 

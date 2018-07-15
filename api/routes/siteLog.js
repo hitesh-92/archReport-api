@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const {ObjectID} = require('mongodb');
 const _ = require('lodash');
 
+
 const siteLog = require('../models/siteLog');
 
 //create new site log
@@ -117,8 +118,83 @@ router.delete('/:logId', (req, res, next) => {
 });
 
 
+//get multiple logs
+router.get('/multiple/:multiple', (req, res, next) => {
+  const ids = req.params.multiple;
+  const splitIDs =  ids.split(',');
+
+  let articles = [];
+
+  const getArticle = async (id) => {
+    const article = await siteLog.findById(id).select('title _id url entryDate').exec();
+    return article;
+  };
+
+  genFor(function*(){
+    for (each of splitIDs) {
+      yield each
+    }
+  });
+
+  function genFor(generator){
+    var gen = generator();
+
+    function handle(yielded){
+      if(!yielded.done){
+
+        let id = yielded.value;
+
+        // async function getArticle(articleId){
+        //   const article = await siteLog.findById(articleId).select('title url entryDate').exec();
+        //   return article;
+        // }
+
+        getArticle(id).then((data) => {
+          console.log(data);
+          articles.push(data);
+          return handle(gen.next());
+        });
 
 
+        // articles.id = article;
+
+      }
+
+      if(yielded.done){
+        console.log('-- GEN DONE --');
+        res.status(200).json({
+          logs: splitIDs,
+          length: splitIDs.length,
+          articles
+        });
+      }
+    }
+    return handle(gen.next());
+
+  }
+
+  // console.log(articles);
+
+  // res.status(200).json({
+  //   logs: splitIDs,
+  //   length: splitIDs.length,
+  //   articles
+  // });
+
+
+  //-------
+  // siteLog.findById(id)
+  // .select('_id title url entryDate')
+  // .exec().then(log => {
+  //
+  //     if(!log){
+  //         return res.status(404).send();
+  //     }
+  //     res.send({log});
+  // })
+  //------
+
+});
 
 
 

@@ -16,6 +16,7 @@ router.post('/', (req, res, next) => {
 
 
     const Column = new column({
+      _id: new mongoose.Types.ObjectId(),
       title: req.body.title,
       logs: logsIds
     });
@@ -42,6 +43,25 @@ router.get('/', (req,res,next) => {
 });
 
 
+//get column by Id
+router.get('/:columnId', (req, res, next) => {
+  const id = req.params.columnId;
+
+  column.findById(id)
+   .select('_id logs title')
+   .exec()
+   .then((data) => {
+
+     if(!data){
+       return res.status(404).send();
+     }
+
+     res.send({data});
+
+   }).catch((err) => {
+     res.status(500).json({error: err});
+   });
+});
 
 
 //update logs array

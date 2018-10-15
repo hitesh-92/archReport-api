@@ -33,7 +33,7 @@ router.post('/signup', (req, res, next) => {
                 })  //user.save
             });//bcrpyt
         }//else
-    });
+    });//then(user)
 });//.post
 
 //setup auto delete of token on logout
@@ -55,10 +55,8 @@ router.delete('/:token', (req, res, next) => {
     }, () => { res.status(400).send(); });
 });
 
-
 router.get('/me', (req, res) => {
     res
 });
-
 
 module.exports = router;

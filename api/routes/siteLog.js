@@ -8,18 +8,21 @@ const _ = require('lodash');
 const siteLog = require('../models/siteLog');
 
 //create new site log
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
+
     const Log = new siteLog({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         url: req.body.url,
         entryDate: new Date().toString()
     });
+
+
     Log.save().then(log => {
         res.status(201).send(log);
     }).catch(err => {
         res.status(400).send(err);
-    })
+    });
 });
 
 //get all site logs
@@ -118,6 +121,7 @@ router.delete('/:logId', (req, res, next) => {
 });
 
 
+// GO OVER THIS AGAIN!
 //get multiple logs
 router.get('/multiple/:multiple', (req, res, next) => {
   const ids = req.params.multiple;
@@ -148,7 +152,7 @@ router.get('/multiple/:multiple', (req, res, next) => {
       }
 
       if(yielded.done){
-        console.log('-- GEN DONE --');
+        // console.log('-- GEN DONE --');
         res.status(200).json({
           logs: splitIDs,
           length: splitIDs.length,
@@ -156,6 +160,7 @@ router.get('/multiple/:multiple', (req, res, next) => {
         });
       }
     }
+
     return handle(gen.next());
   }
 });
